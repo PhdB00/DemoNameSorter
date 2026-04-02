@@ -1,8 +1,10 @@
 # Name Sorter
 
-A .NET application that sorts names from a file by Last Name and then by Given Names.
+A Coding Assessment: A .NET application that sorts names from a file by Last Name and then by Given Names.
 
 ## Overview
+
+This was a coding assessment that asked to show an interesting solution to an extremely simple problem. The approach taken here was clearly excessive for such a simple problem but was an entertaining way of applying software development techniques for demonstration purposes only.
 
 Name Sorter is a command-line application that reads a list of names from a file, sorts them according to specific rules, and outputs the sorted results both to the console and to a file.
 
