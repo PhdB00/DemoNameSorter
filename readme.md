@@ -302,6 +302,7 @@ As noted in the architecture, the Result<T> pattern demonstrates the direction f
 
 ## Project Structure
 
+```
 Name-Sorter/
 ├── NameSorter/                      # Main application
 │   ├── Abstractions/                # Shared patterns (Result<T>)
@@ -340,8 +341,9 @@ Name-Sorter/
 │   └── Infrastructure/
 ├── NameSorter.IntegrationTests/     # End-to-end tests
 │   └── NameSorterIntegrationTests.cs
-├── NameSorter.Benchmarks/           # Performance benchmarks
-│   └── Pipeline/
+└── NameSorter.Benchmarks/           # Performance benchmarks
+    └── Pipeline/
+```
 
 ### Component Organization
 
