@@ -27,15 +27,19 @@ public class NameParser : INameParser
 
         var nameParts = fullName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
         
-        if (nameParts.Length < 2)
-            return Result<Person>.Failure($"Name must contain at least one given name and one last name ({fullName}).");
-        
-        if (nameParts.Length > 4)
-            return Result<Person>.Failure($"Name cannot contain more than three given names and one last name ({fullName}).");
+        switch (nameParts.Length)
+        {
+            case < 2:
+                return Result<Person>.Failure($"Name must contain at least one given name and one last name ({fullName}).");
+            
+            case > 4:
+                return Result<Person>.Failure($"Name cannot contain more than three given names and one last name ({fullName}).");
+            
+            default:
+                var lastName = nameParts[^1];
+                var givenNames = nameParts[..^1].ToList();
 
-        var lastName = nameParts[^1];
-        var givenNames = nameParts[..^1].ToList();
-
-        return Result<Person>.Success(new Person(givenNames, lastName));
+                return Result<Person>.Success(new Person(givenNames, lastName));
+        }
     }
 }

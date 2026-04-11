@@ -30,8 +30,8 @@ public class ConsoleOutputStrategyTests
         var output = new ConsoleOutputStrategy(consoleWriter);
         var names = new List<Person>
         {
-            new(new[] { "John" }, "Smith"),
-            new(new[] { "Jane" }, "Doe")
+            new(["John"], "Smith"),
+            new(["Jane"], "Doe")
         };
         
         // Act
@@ -40,7 +40,10 @@ public class ConsoleOutputStrategyTests
         // Assert
         consoleWriter.Received(2).WriteLine(Arg.Any<string>());
         var calls = consoleWriter.ReceivedCalls().ToList();
-        Assert.That(calls[0].GetArguments()[0], Is.EqualTo("John Smith"));
-        Assert.That(calls[1].GetArguments()[0], Is.EqualTo("Jane Doe"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(calls[0].GetArguments()[0], Is.EqualTo("John Smith"));
+            Assert.That(calls[1].GetArguments()[0], Is.EqualTo("Jane Doe"));
+        });
     }
 }

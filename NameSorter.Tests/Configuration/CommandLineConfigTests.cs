@@ -37,7 +37,7 @@ public class CommandLineConfigTests
     public void Constructor_WithNullArgs_IsNotValid()
     {
         // Arrange & Act
-        var config = new CommandLineConfig(null);
+        var config = new CommandLineConfig(null!);
 
         // Assert
         Assert.Multiple(() =>

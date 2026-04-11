@@ -26,7 +26,12 @@ return;
 
 static IHostBuilder CreateHostBuilder(string[] args)
 {
-    return Host.CreateDefaultBuilder(args);
+    return Host.CreateDefaultBuilder(args)
+        .UseDefaultServiceProvider(options =>
+        {
+            options.ValidateScopes = true;
+            options.ValidateOnBuild = true;
+        });
 }
 
 static IHostBuilder ConfigureServices(IHostBuilder builder, string[] args)
@@ -45,7 +50,7 @@ static IHostBuilder ConfigureServices(IHostBuilder builder, string[] args)
             services.AddTransient<IPipelineStep, SortNamesTransformStep>();
             services.AddTransient<PipelineProcessor, PipelineProcessor>();
             services.AddTransient<IPipelineBuilder, PipelineBuilder>();
-            services.AddTransient<INameParser, NameParser>(); 
-            services.AddTransient<INameSorter, NameSorter>();
+            services.AddSingleton<INameParser, NameParser>(); 
+            services.AddSingleton<INameSorter, NameSorter>();
         });
 }

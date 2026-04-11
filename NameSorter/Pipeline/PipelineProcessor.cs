@@ -34,6 +34,7 @@ public class PipelineProcessor(
                 case IPipelineExtractStep extractStep:
                     Extract(extractStep);
                     break;
+                
                 case IPipelineTransformStep transformStep:
                     Transform(transformStep);
                     break;
@@ -51,6 +52,6 @@ public class PipelineProcessor(
             people = extract.Process();
 
         void Transform(IPipelineTransformStep transform) =>
-            people = transform.Process(people);
+            people = transform.Process(people!);
     }
 }

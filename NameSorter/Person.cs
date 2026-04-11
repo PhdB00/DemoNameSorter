@@ -14,12 +14,21 @@ public class Person
         if (givenNames == null) throw new ArgumentNullException(nameof(givenNames));
         if (string.IsNullOrWhiteSpace(lastName)) throw new ArgumentNullException(nameof(lastName));
 
-        var givenNamesList = givenNames.ToList();
-        if (givenNamesList.Count == 0) throw new ArgumentException("At least one given name is required.", nameof(givenNames));
-        if (givenNamesList.Count > 3) throw new ArgumentException("Maximum three given names are allowed.", nameof(givenNames));
-
-        GivenNames = givenNamesList;
-        LastName = lastName;
+        var givenNamesList = givenNames
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .ToList();
+        
+        switch (givenNamesList.Count)
+        {
+            case 0:
+                throw new ArgumentException("At least one given name is required.", nameof(givenNames));
+            case > 3:
+                throw new ArgumentException("Maximum three given names are allowed.", nameof(givenNames));
+            default:
+                GivenNames = givenNamesList;
+                LastName = lastName;
+                break;
+        }
     }
 
     public override string ToString()

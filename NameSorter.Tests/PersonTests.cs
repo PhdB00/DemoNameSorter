@@ -14,9 +14,12 @@ public class PersonTests
         // Act
         var person = new Person(givenNames, lastName);
 
-        // Assert
-        Assert.That(person.GivenNames, Is.EqualTo(givenNames));
-        Assert.That(person.LastName, Is.EqualTo(lastName));
+        Assert.Multiple(() =>
+        {
+            // Assert
+            Assert.That(person.GivenNames, Is.EqualTo(givenNames));
+            Assert.That(person.LastName, Is.EqualTo(lastName));
+        });
     }
 
     [Test]
@@ -51,9 +54,12 @@ public class PersonTests
         var lastName = "Smith";
 
         // Act, Assert
-        var ex = Assert.Throws<ArgumentException>(() => new Person(givenNames, lastName));
-        Assert.That(ex.ParamName, Is.EqualTo("givenNames"));
-        Assert.That(ex.Message, Does.Contain("At least one given name is required"));
+        Assert.Multiple(() =>
+        {
+            var ex = Assert.Throws<ArgumentException>(() => new Person(givenNames, lastName));
+            Assert.That(ex.ParamName, Is.EqualTo("givenNames"));
+            Assert.That(ex.Message, Does.Contain("At least one given name is required"));
+        });
     }
 
     [Test]
@@ -64,9 +70,12 @@ public class PersonTests
         var lastName = "Smith";
 
         // Act, Assert
-        var ex = Assert.Throws<ArgumentException>(() => new Person(givenNames, lastName));
-        Assert.That(ex.ParamName, Is.EqualTo("givenNames"));
-        Assert.That(ex.Message, Does.Contain("Maximum three given names are allowed"));
+        Assert.Multiple(() =>
+        {
+            var ex = Assert.Throws<ArgumentException>(() => new Person(givenNames, lastName));
+            Assert.That(ex.ParamName, Is.EqualTo("givenNames"));
+            Assert.That(ex.Message, Does.Contain("Maximum three given names are allowed"));
+        });
     }
 
     [Test]

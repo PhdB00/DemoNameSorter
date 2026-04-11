@@ -22,7 +22,7 @@ public class ReadNamesExtractStep(
             throw new FileNotFoundException("Input file not found.", filePath);
 
         var names = fileSystem.ReadAllLines(filePath)
-            .Where(line => !string.IsNullOrWhiteSpace(line));
+            .Where(line => !string.IsNullOrWhiteSpace(line.Trim()));
         
         var results = names.Select(nameParser.ParseName).ToList();
         

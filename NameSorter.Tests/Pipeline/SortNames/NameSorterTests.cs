@@ -1,101 +1,100 @@
 using DD.NameSorter;
 
-namespace NameSorter.Tests.Pipeline.SortNames
+namespace NameSorter.Tests.Pipeline.SortNames;
+
+[TestFixture]
+public class NameSorterTests
 {
-    [TestFixture]
-    public class NameSorterTests
+    private DD.NameSorter.Pipeline.SortNames.NameSorter sorter;
+
+    [SetUp]
+    public void Setup()
     {
-        private DD.NameSorter.Pipeline.SortNames.NameSorter sorter;
+        sorter = new DD.NameSorter.Pipeline.SortNames.NameSorter();
+    }
 
-        [SetUp]
-        public void Setup()
+    [Test]
+    public void Sort_WithEmptyList_ReturnsEmptyList()
+    {
+        // Arrange
+        var people = new List<Person>();
+
+        // Act
+        var result = sorter.Sort(people).ToList();
+
+        // Assert
+        Assert.That(result, Is.Empty);
+    }
+
+    [Test]
+    public void Sort_WithDifferentLastNames_SortsByLastName()
+    {
+        // Arrange
+        var people = new List<Person>
         {
-            sorter = new DD.NameSorter.Pipeline.SortNames.NameSorter();
-        }
+            new(["John"], "Smith"),
+            new(["Jane"], "Doe"),
+            new(["Bob"], "Anderson")
+        };
 
-        [Test]
-        public void Sort_WithEmptyList_ReturnsEmptyList()
+        // Act
+        var result = sorter.Sort(people).ToList();
+
+        // Assert
+        Assert.Multiple(() =>
         {
-            // Arrange
-            var people = new List<Person>();
+            Assert.That(result, Has.Count.EqualTo(3));
+            Assert.That(result[0].LastName, Is.EqualTo("Anderson"));
+            Assert.That(result[1].LastName, Is.EqualTo("Doe"));
+            Assert.That(result[2].LastName, Is.EqualTo("Smith"));
+        });
+    }
 
-            // Act
-            var result = sorter.Sort(people).ToList();
-
-            // Assert
-            Assert.That(result, Is.Empty);
-        }
-
-        [Test]
-        public void Sort_WithDifferentLastNames_SortsByLastName()
+    [Test]
+    public void Sort_WithSameLastNames_SortsByGivenNames()
+    {
+        // Arrange
+        var people = new List<Person>
         {
-            // Arrange
-            var people = new List<Person>
-            {
-                new Person(new[] { "John" }, "Smith"),
-                new Person(new[] { "Jane" }, "Doe"),
-                new Person(new[] { "Bob" }, "Anderson")
-            };
+            new Person(new[] { "John" }, "Smith"),
+            new Person(new[] { "Adam" }, "Smith"),
+            new Person(new[] { "Bob" }, "Smith")
+        };
 
-            // Act
-            var result = sorter.Sort(people).ToList();
+        // Act
+        var result = sorter.Sort(people).ToList();
 
-            // Assert
-            Assert.Multiple(() =>
-            {
-                Assert.That(result, Has.Count.EqualTo(3));
-                Assert.That(result[0].LastName, Is.EqualTo("Anderson"));
-                Assert.That(result[1].LastName, Is.EqualTo("Doe"));
-                Assert.That(result[2].LastName, Is.EqualTo("Smith"));
-            });
-        }
-
-        [Test]
-        public void Sort_WithSameLastNames_SortsByGivenNames()
+        // Assert
+        Assert.Multiple(() =>
         {
-            // Arrange
-            var people = new List<Person>
-            {
-                new Person(new[] { "John" }, "Smith"),
-                new Person(new[] { "Adam" }, "Smith"),
-                new Person(new[] { "Bob" }, "Smith")
-            };
+            Assert.That(result, Has.Count.EqualTo(3));
+            Assert.That(result[0].GivenNames[0], Is.EqualTo("Adam"));
+            Assert.That(result[1].GivenNames[0], Is.EqualTo("Bob"));
+            Assert.That(result[2].GivenNames[0], Is.EqualTo("John"));
+        });
+    }
 
-            // Act
-            var result = sorter.Sort(people).ToList();
-
-            // Assert
-            Assert.Multiple(() =>
-            {
-                Assert.That(result, Has.Count.EqualTo(3));
-                Assert.That(result[0].GivenNames[0], Is.EqualTo("Adam"));
-                Assert.That(result[1].GivenNames[0], Is.EqualTo("Bob"));
-                Assert.That(result[2].GivenNames[0], Is.EqualTo("John"));
-            });
-        }
-
-        [Test]
-        public void Sort_WithMultipleGivenNames_SortsByAllGivenNames()
+    [Test]
+    public void Sort_WithMultipleGivenNames_SortsByAllGivenNames()
+    {
+        // Arrange
+        var people = new List<Person>
         {
-            // Arrange
-            var people = new List<Person>
-            {
-                new Person(new[] { "John", "Adam" }, "Smith"),
-                new Person(new[] { "John", "Bob" }, "Smith"),
-                new Person(new[] { "John", "Albert" }, "Smith")
-            };
+            new Person(new[] { "John", "Adam" }, "Smith"),
+            new Person(new[] { "John", "Bob" }, "Smith"),
+            new Person(new[] { "John", "Albert" }, "Smith")
+        };
 
-            // Act
-            var result = sorter.Sort(people).ToList();
+        // Act
+        var result = sorter.Sort(people).ToList();
 
-            // Assert
-            Assert.Multiple(() =>
-            {
-                Assert.That(result, Has.Count.EqualTo(3));
-                Assert.That(string.Join(" ", result[0].GivenNames), Is.EqualTo("John Adam"));
-                Assert.That(string.Join(" ", result[1].GivenNames), Is.EqualTo("John Albert"));
-                Assert.That(string.Join(" ", result[2].GivenNames), Is.EqualTo("John Bob"));
-            });
-        }
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Has.Count.EqualTo(3));
+            Assert.That(string.Join(" ", result[0].GivenNames), Is.EqualTo("John Adam"));
+            Assert.That(string.Join(" ", result[1].GivenNames), Is.EqualTo("John Albert"));
+            Assert.That(string.Join(" ", result[2].GivenNames), Is.EqualTo("John Bob"));
+        });
     }
 }

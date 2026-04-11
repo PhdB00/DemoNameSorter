@@ -115,7 +115,7 @@ public class NameSorterIntegrationTests
     public void ProcessPipeline_WithEmptyInput_HandlesGracefully()
     {
         // Arrange
-        fileSystem.ReadAllLines(TestInputFile).Returns(Array.Empty<string>());
+        fileSystem.ReadAllLines(TestInputFile).Returns([]);
 
         // Act
         var pipeline = serviceProvider!.GetRequiredService<IPipelineBuilder>().Build();

@@ -21,7 +21,7 @@ public class FileOutputStrategy(
         if (!people.Any())
             return;
         
-        string filePath = config.OutputFile ?? throw new ArgumentNullException(nameof(filePath));
+        string filePath = config.OutputFile ?? throw new ArgumentNullException(nameof(config.OutputFile));
         fileSystem.WriteAllLines(filePath, people.Select(p => p.ToString()));
     }
 }

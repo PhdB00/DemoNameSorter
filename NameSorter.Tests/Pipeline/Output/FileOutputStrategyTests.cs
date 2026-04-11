@@ -35,8 +35,8 @@ public class FileOutputStrategyTests
         var fileOutput = new FileOutputStrategy(commandLine, fileSystem);
         var names = new List<Person>
         {
-            new(new[] { "John" }, "Smith"),
-            new(new[] { "Jane" }, "Doe")
+            new(["John"], "Smith"),
+            new(["Jane"], "Doe")
         };
         
         commandLine.OutputFile.Returns("test-output.txt");
