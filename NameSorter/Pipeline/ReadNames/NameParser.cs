@@ -1,4 +1,5 @@
 using DD.NameSorter.Abstractions;
+using Microsoft.Extensions.Logging;
 
 namespace DD.NameSorter.Pipeline.ReadNames;
 
@@ -18,23 +19,28 @@ public interface INameParser
 /// Ensures the name follows requirements such as containing at least two parts (a given name and a last name),
 /// and restricts the total number of parts that may comprise a given name.
 /// </remarks>
-public class NameParser : INameParser
+public class NameParser(ILogger<NameParser> logger) : INameParser
 {
     public Result<Person> ParseName(string fullName)
     {
         if (string.IsNullOrWhiteSpace(fullName))
+        {
+            logger.LogWarning("Attempted to parse empty or whitespace name");
             return Result<Person>.Failure("Full name cannot be empty.");
+        }
 
         var nameParts = fullName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        
+
         switch (nameParts.Length)
         {
             case < 2:
+                logger.LogWarning("Name parsing failed: insufficient parts in '{FullName}'", fullName);
                 return Result<Person>.Failure($"Name must contain at least one given name and one last name ({fullName}).");
-            
+
             case > 4:
+                logger.LogWarning("Name parsing failed: too many parts in '{FullName}'", fullName);
                 return Result<Person>.Failure($"Name cannot contain more than three given names and one last name ({fullName}).");
-            
+
             default:
                 var lastName = nameParts[^1];
                 var givenNames = nameParts[..^1].ToList();

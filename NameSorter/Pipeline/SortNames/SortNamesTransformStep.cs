@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+
 namespace DD.NameSorter.Pipeline.SortNames;
 
 /// <summary>
@@ -10,11 +12,17 @@ namespace DD.NameSorter.Pipeline.SortNames;
 /// The order of this step is defined by the <see cref="PipelineStepOrderAttribute"/> with a value indicating it as a sorting step.
 /// </remarks>
 [PipelineStepOrder(PipelineStepOrders.Sort)]
-public class SortNamesTransformStep(INameSorter nameSorter) 
+public class SortNamesTransformStep(
+    INameSorter nameSorter,
+    ILogger<SortNamesTransformStep> logger)
     : IPipelineStep, IPipelineTransformStep
 {
     public IEnumerable<Person> Process(IEnumerable<Person> people)
     {
-        return nameSorter.Sort(people);
+        var count = people.Count();
+        logger.LogInformation("Sorting {Count} names", count);
+        var sorted = nameSorter.Sort(people);
+        logger.LogDebug("Sorting completed");
+        return sorted;
     }
 }

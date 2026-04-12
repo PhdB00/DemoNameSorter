@@ -1,5 +1,6 @@
 using System.Reflection;
 using DD.NameSorter.Pipeline;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace NameSorter.Tests.Pipeline;
 
@@ -15,7 +16,7 @@ public class PipelineBuilderTests
             new TestStep1(),
             new TestStep2()
         };
-        var builder = new PipelineBuilder(steps);
+        var builder = new PipelineBuilder(steps, NullLogger<PipelineProcessor>.Instance);
 
         // Act
         var result = builder.Build();
@@ -34,7 +35,7 @@ public class PipelineBuilderTests
             new DuplicateOrderStep1(),
             new DuplicateOrderStep2()
         };
-        var builder = new PipelineBuilder(steps);
+        var builder = new PipelineBuilder(steps, NullLogger<PipelineProcessor>.Instance);
 
         // Act & Assert
         Assert.Throws<InvalidOperationException>(() => builder.Build());
@@ -47,9 +48,9 @@ public class PipelineBuilderTests
         var step3 = new OrderedStep3();
         var step1 = new OrderedStep1();
         var step2 = new OrderedStep2();
-            
+
         var steps = new List<IPipelineStep> { step3, step1, step2 };
-        var builder = new PipelineBuilder(steps);
+        var builder = new PipelineBuilder(steps, NullLogger<PipelineProcessor>.Instance);
 
         // Act
         var result = builder.Build();
@@ -76,9 +77,9 @@ public class PipelineBuilderTests
         // Arrange
         var orderedStep = new OrderedStep1();
         var unorderedStep = new UnorderedStep();
-            
+
         var steps = new List<IPipelineStep> { unorderedStep, orderedStep };
-        var builder = new PipelineBuilder(steps);
+        var builder = new PipelineBuilder(steps, NullLogger<PipelineProcessor>.Instance);
 
         // Act
         var result = builder.Build();
@@ -103,7 +104,7 @@ public class PipelineBuilderTests
     {
         // Arrange
         var steps = new List<IPipelineStep>();
-        var builder = new PipelineBuilder(steps);
+        var builder = new PipelineBuilder(steps, NullLogger<PipelineProcessor>.Instance);
 
         // Act
         var result = builder.Build();

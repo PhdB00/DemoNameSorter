@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+
 namespace DD.NameSorter.Pipeline.Output;
 
 /// <summary>
@@ -9,16 +11,24 @@ namespace DD.NameSorter.Pipeline.Output;
 /// IPipelineTransformStep interfaces.
 /// </remarks>
 [PipelineStepOrder(PipelineStepOrders.Output)]
-public class OutputNamesTransformStep(IEnumerable<IOutputStrategy> outputStrategies) 
+public class OutputNamesTransformStep(
+    IEnumerable<IOutputStrategy> outputStrategies,
+    ILogger<OutputNamesTransformStep> logger)
     : IPipelineStep, IPipelineTransformStep
 {
     public IEnumerable<Person> Process(IEnumerable<Person> people)
     {
         var peopleList = people.ToList();
+        logger.LogInformation("Outputting {Count} sorted names using {StrategyCount} strategies",
+            peopleList.Count, outputStrategies.Count());
+
         foreach (var strategy in outputStrategies)
         {
+            var strategyName = strategy.GetType().Name;
+            logger.LogDebug("Executing output strategy: {StrategyName}", strategyName);
             strategy.Output(peopleList);
         }
+
         return peopleList;
     }
 }

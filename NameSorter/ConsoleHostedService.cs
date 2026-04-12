@@ -1,6 +1,7 @@
 using DD.NameSorter.Configuration;
 using DD.NameSorter.Pipeline;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace DD.NameSorter;
 
@@ -15,21 +16,26 @@ namespace DD.NameSorter;
 public class ConsoleHostedService(
     IHostApplicationLifetime lifetime,
     ICommandLineConfig config,
-    IPipelineBuilder pipelineBuilder
+    IPipelineBuilder pipelineBuilder,
+    ILogger<ConsoleHostedService> logger
     ) : IHostedService
 {
     public Task StartAsync(CancellationToken cancellationToken)
     {
         if (!config.IsValid || config is { InputFile: null })
         {
+            logger.LogError("Command line arguments are not valid");
             Console.WriteLine("Command line arguments are not valid.");
             lifetime.StopApplication();
             return Task.CompletedTask;
         }
 
+        logger.LogInformation("Processing input file {InputFile}", config.InputFile);
+
         var pipeline = pipelineBuilder.Build();
         pipeline.ProcessPipeline();
-        
+
+        logger.LogInformation("Pipeline processing completed successfully");
         lifetime.StopApplication();
         return Task.CompletedTask;
     }

@@ -7,6 +7,7 @@ using DD.NameSorter.Pipeline.ReadNames;
 using DD.NameSorter.Pipeline.SortNames;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 try
 {
@@ -27,6 +28,8 @@ return;
 static IHostBuilder CreateHostBuilder(string[] args)
 {
     return Host.CreateDefaultBuilder(args)
+        .UseSerilog((context, configuration) =>
+            configuration.ReadFrom.Configuration(context.Configuration))
         .UseDefaultServiceProvider(options =>
         {
             options.ValidateScopes = true;

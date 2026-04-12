@@ -3,6 +3,7 @@ using DD.NameSorter.Abstractions;
 using DD.NameSorter.Configuration;
 using DD.NameSorter.Infrastructure;
 using DD.NameSorter.Pipeline.ReadNames;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 
@@ -22,7 +23,7 @@ public class ReadNamesExtractStepTests
         config = Substitute.For<ICommandLineConfig>();
         fileSystem = Substitute.For<IFileSystem>();
         nameParser = Substitute.For<INameParser>();
-        step = new ReadNamesExtractStep(config, fileSystem, nameParser);
+        step = new ReadNamesExtractStep(config, fileSystem, nameParser, NullLogger<ReadNamesExtractStep>.Instance);
     }
 
     [Test]

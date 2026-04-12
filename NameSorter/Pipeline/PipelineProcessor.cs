@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+
 namespace DD.NameSorter.Pipeline;
 
 /// <summary>
@@ -21,20 +23,25 @@ public interface IPipelineProcessor
 /// If no data remains after execution of a step, the pipeline terminates.
 /// </remarks>
 public class PipelineProcessor(
-    IEnumerable<IPipelineStep> steps) 
+    IEnumerable<IPipelineStep> steps,
+    ILogger<PipelineProcessor> logger)
     : IPipelineProcessor
 {
     public void ProcessPipeline()
     {
+        logger.LogInformation("Starting pipeline execution");
         IEnumerable<Person>? people = null;
         foreach (var step in steps)
         {
+            var stepName = step.GetType().Name;
+            logger.LogDebug("Executing pipeline step: {StepName}", stepName);
+
             switch (step)
             {
                 case IPipelineExtractStep extractStep:
                     Extract(extractStep);
                     break;
-                
+
                 case IPipelineTransformStep transformStep:
                     Transform(transformStep);
                     break;
@@ -42,10 +49,12 @@ public class PipelineProcessor(
 
             if (people is null || !people.Any())
             {
+                logger.LogWarning("Pipeline terminated early: no data after step {StepName}", stepName);
                 break;
             }
         }
 
+        logger.LogInformation("Pipeline execution completed");
         return;
 
         void Extract(IPipelineExtractStep extract) =>

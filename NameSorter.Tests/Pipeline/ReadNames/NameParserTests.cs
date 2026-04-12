@@ -1,4 +1,5 @@
 using DD.NameSorter.Pipeline.ReadNames;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace NameSorter.Tests.Pipeline.ReadNames;
 
@@ -10,7 +11,7 @@ public class NameParserTests
     [SetUp]
     public void Setup()
     {
-        parser = new NameParser();
+        parser = new NameParser(NullLogger<NameParser>.Instance);
     }
 
     [Test]

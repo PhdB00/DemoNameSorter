@@ -1,5 +1,6 @@
 using DD.NameSorter;
 using DD.NameSorter.Pipeline.Output;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 
 namespace NameSorter.Tests.Pipeline.Output;
@@ -16,8 +17,8 @@ public class OutputNamesTransformStepTests
         var outputStrategies = new List<IOutputStrategy>
         {
             consoleStrategy, fileStrategy
-        }; 
-        var step = new OutputNamesTransformStep(outputStrategies);
+        };
+        var step = new OutputNamesTransformStep(outputStrategies, NullLogger<OutputNamesTransformStep>.Instance);
         var people = new List<Person>
         {
             new(new[] { "John" }, "Smith"),
