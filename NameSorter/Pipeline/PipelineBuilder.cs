@@ -1,4 +1,5 @@
 using System.Reflection;
+using Microsoft.Extensions.Logging;
 
 namespace DD.NameSorter.Pipeline;
 
@@ -21,14 +22,16 @@ public interface IPipelineBuilder
 /// without modifying the existing pipeline behaviours and with limited need to 
 /// manually rearrange the order of pipeline steps.
 /// </remarks>
-public class PipelineBuilder(IEnumerable<IPipelineStep> steps) 
+public class PipelineBuilder(
+    IEnumerable<IPipelineStep> steps,
+    ILogger<PipelineProcessor> logger)
     : IPipelineBuilder
 {
     public PipelineProcessor Build()
     {
         ValidateSteps();
         var pipelineSteps = OrderSteps();
-        var pipeline = new PipelineProcessor(pipelineSteps);
+        var pipeline = new PipelineProcessor(pipelineSteps, logger);
         return pipeline;
     }
 

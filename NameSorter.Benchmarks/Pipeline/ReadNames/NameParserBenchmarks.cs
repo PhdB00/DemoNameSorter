@@ -1,5 +1,6 @@
 using BenchmarkDotNet.Attributes;
 using DD.NameSorter.Pipeline.ReadNames;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace NameSorter.Benchmarks.Pipeline.ReadNames;
 
@@ -14,12 +15,13 @@ public class NameParserBenchmarks
     private string[] fourPartNames;
 
     [Params(100, 1000, 10000)]
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public int NameCount { get; set; }
 
     [GlobalSetup]
     public void Setup()
     {
-        parser = new NameParser();
+        parser = new NameParser(NullLogger<NameParser>.Instance);
         
         twoPartNames = GenerateNames(NameCount, 2);
         threePartNames = GenerateNames(NameCount, 3);

@@ -1,5 +1,6 @@
 using DD.NameSorter.Configuration;
 using DD.NameSorter.Infrastructure;
+using Microsoft.Extensions.Logging;
 
 namespace DD.NameSorter.Pipeline.Output;
 
@@ -13,15 +14,30 @@ namespace DD.NameSorter.Pipeline.Output;
 /// </remarks>
 public class FileOutputStrategy(
     ICommandLineConfig config,
-    IFileSystem fileSystem) 
+    IFileSystem fileSystem,
+    ILogger<FileOutputStrategy> logger)
     : IOutputStrategy
 {
     public void Output(IEnumerable<Person> people)
     {
         if (!people.Any())
+        {
+            logger.LogWarning("No names to output to file");
             return;
-        
+        }
+
         string filePath = config.OutputFile ?? throw new ArgumentNullException(nameof(config.OutputFile));
-        fileSystem.WriteAllLines(filePath, people.Select(p => p.ToString()));
+        logger.LogInformation("Writing {Count} sorted names to file {FilePath}", people.Count(), filePath);
+
+        try
+        {
+            fileSystem.WriteAllLines(filePath, people.Select(p => p.ToString()));
+            logger.LogInformation("Successfully wrote sorted names to {FilePath}", filePath);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to write sorted names to file {FilePath}", filePath);
+            throw;
+        }
     }
 }

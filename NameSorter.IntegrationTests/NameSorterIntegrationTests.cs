@@ -5,6 +5,7 @@ using DD.NameSorter.Pipeline.Output;
 using DD.NameSorter.Pipeline.ReadNames;
 using DD.NameSorter.Pipeline.SortNames;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace NameSorter.IntegrationTests;
@@ -60,11 +61,13 @@ public class NameSorterIntegrationTests
     private void ConfigureServices()
     {
         var services = new ServiceCollection();
-        
+
+        services.AddLogging(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Warning));
+
         services.AddSingleton(config);
         services.AddSingleton(fileSystem);
         services.AddSingleton(consoleWriter);
-        
+
         services.AddTransient<IOutputStrategy, ConsoleOutputStrategy>();
         services.AddTransient<IOutputStrategy, FileOutputStrategy>();
         services.AddTransient<IPipelineStep, ReadNamesExtractStep>();

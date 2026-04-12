@@ -1,5 +1,6 @@
 using DD.NameSorter;
 using DD.NameSorter.Pipeline;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 
 namespace NameSorter.Tests.Pipeline;
@@ -16,13 +17,13 @@ public class PipelineProcessorTests
         extractStep = Substitute.For<IPipelineStep, IPipelineExtractStep>();
         transformStep = Substitute.For<IPipelineStep, IPipelineTransformStep>();
     }
-        
+
     [Test]
     public void ProcessPipeline_WithExtractStepOnly_CallsExtractStep()
     {
         // Arrange
         var steps = new List<IPipelineStep> { extractStep };
-        var processor = new PipelineProcessor(steps);
+        var processor = new PipelineProcessor(steps, NullLogger<PipelineProcessor>.Instance);
 
         // Act
         processor.ProcessPipeline();
@@ -36,7 +37,7 @@ public class PipelineProcessorTests
     {
         // Arrange
         var steps = new List<IPipelineStep> { transformStep };
-        var processor = new PipelineProcessor(steps);
+        var processor = new PipelineProcessor(steps, NullLogger<PipelineProcessor>.Instance);
 
         // Act
         processor.ProcessPipeline();

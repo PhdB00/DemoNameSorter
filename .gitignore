@@ -111,3 +111,7 @@ ServiceFabricBackup/
 
 # Local History
 .localhistory/
+
+# Application Logs
+logs/
+*.log

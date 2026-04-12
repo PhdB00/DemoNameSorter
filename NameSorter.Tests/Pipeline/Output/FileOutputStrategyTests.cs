@@ -2,6 +2,7 @@ using DD.NameSorter;
 using DD.NameSorter.Configuration;
 using DD.NameSorter.Infrastructure;
 using DD.NameSorter.Pipeline.Output;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 
 namespace NameSorter.Tests.Pipeline.Output;
@@ -15,7 +16,7 @@ public class FileOutputStrategyTests
         // Arrange
         var commandLine = Substitute.For<ICommandLineConfig>();
         var fileSystem = Substitute.For<IFileSystem>();
-        var fileOutput = new FileOutputStrategy(commandLine, fileSystem);
+        var fileOutput = new FileOutputStrategy(commandLine, fileSystem, NullLogger<FileOutputStrategy>.Instance);
         
         commandLine.OutputFile.Returns("test-output.txt");
         
@@ -32,7 +33,7 @@ public class FileOutputStrategyTests
         // Arrange
         var commandLine = Substitute.For<ICommandLineConfig>();
         var fileSystem = Substitute.For<IFileSystem>();
-        var fileOutput = new FileOutputStrategy(commandLine, fileSystem);
+        var fileOutput = new FileOutputStrategy(commandLine, fileSystem, NullLogger<FileOutputStrategy>.Instance);
         var names = new List<Person>
         {
             new(["John"], "Smith"),
