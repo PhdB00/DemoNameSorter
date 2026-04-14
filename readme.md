@@ -1,6 +1,6 @@
 # Name Sorter
 
-A production-ready .NET application demonstrating enterprise architecture patterns for sorting names from a file.
+A production-ready .NET application demonstrating enterprise architecture patterns for sorting names from a file. This solution was developed as part of a coding assessment where candidates were asked to demonstrate coding and design skills while fulfilling a very simple task.
 
 ## Overview
 
